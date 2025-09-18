@@ -1,40 +1,48 @@
-# ADOO_EXTRA
+Ôªø# Space Game - Patrones de Dise√±o
 
-# Space Game - Patrones de DiseÒo
-
-Este proyecto implementa 7 patrones de diseÒo en un juego de naves tipo shooter 2D en Unity
+Este proyecto es un juego shooter 2D desarrollado en Unity que implementa 7 patrones de dise√±o en el proyecto
 
 ## Patrones implementados
 
 1. **Singleton**
-   - **Por quÈ:** Para tener una instancia global de GameManager y AudioManager
-   - **DÛnde:** `GameManager.cs`, `AudioManager.cs`
+   - **Por qu√©:** Para garantizar que exista solo una instancia global de los sistemas centrales del juego, permitiendo acceso desde cualquier script sin acoplar objetos directamente
+   - **D√≥nde:** `GameManager.cs` (gestiona estado del juego y escenas)
 
-2. **Observer / MVP**
-   - **Por quÈ:** Para actualizar la UI en tiempo real cuando cambian la vida del jugador o se destruyen enemigos
-   - **DÛnde:** `UIManager.cs` suscrito a `Jugador.OnVidaCambiada` y `Enemigo.OnEnemigoDestruido`
+2. **Observer / Event**
+   - **Por qu√©:** Para desacoplar la l√≥gica del jugador y los enemigos de la UI, permitiendo que los cambios en vida o muerte se reflejen autom√°ticamente en la interfaz
+   - **D√≥nde:** 
+     - `UIManager.cs` se suscribe a `Jugador.OnVidaCambiada` para actualizar la barra de vida
+     - `UIManager.cs` se suscribe a `Enemigo.OnEnemigoDestruido` para actualizar el puntaje
 
-3. **Factory / Fabrica de F·bricas**
-   - **Por quÈ:** Para crear enemigos y obst·culos de forma flexible y desacoplada
-   - **DÛnde:** `EnemySpawner.cs` crea `EnemigoRapido` y `EnemigoFuerte`
+3. **Factory / Fabrica de F√°bricas**
+   - **Por qu√©:** Para crear enemigos de manera flexible y sin acoplar el spawner a tipos concretos, facilitando a√±adir nuevos enemigos sin modificar el spawner
+   - **D√≥nde:** `EnemySpawner.cs` crea instancias de `EnemigoRapido` y `EnemigoFuerte` de manera aleatoria
 
-4. **FSM (Finite State Machine)**
-   - **Por quÈ:** Para controlar el comportamiento de enemigos (patrullar, atacar, etc.)
-   - **DÛnde:** Clases derivadas de `Enemigo` implementando distintos estados
+4. **Abstract Factory / Clases abstractas**
+   - **Por qu√©:** Para definir un contrato de comportamiento com√∫n para todos los enemigos (`Enemigo.cs`), obligando a las subclases a implementar el m√©todo `Mover()`
+   - **D√≥nde:** `Enemigo.cs` (clase abstracta), `EnemigoFuerte.cs`, `EnemigoRapido.cs`
 
-5. **Object Pool**
-   - **Por quÈ:** Para reciclar enemigos y proyectiles, evitando instanciaciones/destrucciones constantes
-   - **DÛnde:** Puede implementarse en un script `PoolManager.cs` para proyectiles y enemigos
+5. **Interface / Polimorfismo**
+   - **Por qu√©:** Para permitir que cualquier objeto que pueda recibir da√±o implemente un contrato com√∫n (`IDanable`), simplificando la interacci√≥n entre proyectiles y objetivos
+   - **D√≥nde:** `IDanable.cs` implementada en `Jugador.cs`, `Enemigo.cs`, `EnemyProjectile.cs`
 
-6. **Strategy (opcional seg˙n tu implementaciÛn)**
-   - **Por quÈ:** Para cambiar el comportamiento de movimiento de enemigos de manera din·mica
-   - **DÛnde:** MÈtodos `Mover()` en `EnemigoFuerte` y `EnemigoRapido`
+6. **Delegates / Events para comunicaci√≥n entre objetos**
+   - **Por qu√©:** Para notificar de manera eficiente cuando un enemigo es destruido o cambia la vida del jugador, sin crear dependencias directas
+   - **D√≥nde:** 
+     - `Enemigo.OnEnemigoDestruido`  
+     - `Jugador.OnVidaCambiada`  
+     - usado por `UIManager.cs` para actualizar la UI
 
-7. **Command (opcional)**
-   - **Por quÈ:** Para abstraer acciones de jugador o enemigos (disparar, saltar, etc.)
-   - **DÛnde:** MÈtodos `Disparar()` en `Jugador.cs` y `Enemigo.cs`
+7. **Component / Modularidad**
+   - **Por qu√©:** Para separar responsabilidades en componentes individuales, siguiendo la arquitectura de Unity y SOLID. Cada script tiene una sola responsabilidad: mover, disparar, controlar UI, spawnear enemigos, etc
+   - **D√≥nde:**  
+     - `Jugador.cs` ‚Üí movimiento y disparo del jugador  
+     - `Proyectil.cs` y `EnemyProjectile.cs` ‚Üí l√≥gica de proyectiles  
+     - `UIManager.cs` ‚Üí gesti√≥n de la interfaz  
+     - `EnemySpawner.cs` ‚Üí generaci√≥n de enemigos  
+     - `GameManager.cs` ‚Üí control general del juego  
 
-## CÛmo usar el proyecto
+## C√≥mo usar el proyecto
 
 1. Abrir el proyecto en Unity 6
 2. Ejecutar la escena principal `Menu`.
